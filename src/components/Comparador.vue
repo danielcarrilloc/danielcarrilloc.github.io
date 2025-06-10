@@ -206,6 +206,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
+import type { DistanceData, Place, GroupedData } from '../types.ts';
 
 const defaultDistanceData: DistanceData = {
     'islas-cies': { vigo: 30, coruna: 150, penalty: { vigo: 1, coruna: 5 }, zone: 'vigo', name: '🏖️ Islas Cíes', defaultValue: 8, custom: false },
@@ -225,7 +226,6 @@ const defaultDistanceData: DistanceData = {
 
 const distanceData = ref<DistanceData>(structuredClone(defaultDistanceData))
 
-// Puedes añadir descripciones aquí o importarlas de otro lugar
 const descriptions = {
     'islas-cies': 'Paraíso natural, Parque Nacional, playas vírgenes',
     'centro-vigo': 'Casco antiguo, mercado, vida nocturna',
@@ -386,7 +386,7 @@ const groupedData = computed<GroupedData>(() => {
 });
 
 const resetValues = () => {
-    distanceData.value = structuredClone(defaultDistanceData)
+    distanceData.value = updatePenalties(distanceData.value);
     updateCalculation()
 }
 
@@ -445,8 +445,7 @@ const updatePenalties = (data: DistanceData): DistanceData => {
 };
 
 onMounted(() => {
-    distanceData.value = updatePenalties(distanceData.value);
-    updateCalculation()
+    resetValues()
 })
 </script>
 
